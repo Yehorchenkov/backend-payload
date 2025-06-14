@@ -15,17 +15,22 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
-    "@payloadcms/next": "3.31.0",
-    "@payloadcms/payload-cloud": "3.31.0",
-    "@payloadcms/richtext-lexical": "3.31.0",
+    "@nouance/payload-better-fields-plugin": "^2.0.2",
+    "@payload-enchants/docs-reorder": "^1.2.2",
+    "@payloadcms/db-sqlite": "3.41.0",
+    "@payloadcms/next": "3.41.0",
+    "@payloadcms/payload-cloud": "3.41.0",
+    "@payloadcms/plugin-seo": "3.41.0",
+    "@payloadcms/richtext-lexical": "3.41.0",
+    "@shefing/authors-info": "^1.0.3",
+    "@shefing/custom-version-view": "^1.0.2",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
     "next": "15.2.3",
-    "payload": "3.31.0",
+    "payload": "3.41.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "sharp": "0.32.6",
-    "@payloadcms/db-sqlite": "3.31.0"
+    "sharp": "0.32.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

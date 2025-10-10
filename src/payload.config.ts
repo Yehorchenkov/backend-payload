@@ -21,6 +21,7 @@ import { Tags } from './collections/Tags'
 import { Programs } from './collections/Programs'
 import { Projects } from './collections/Projects'
 import { Pages } from './collections/Pages'
+import { TeamMembers } from './collections/TeamMembers'
 
 // Blocks
 import { ContentWithMedia } from './blocks/ContentWithMedia'
@@ -30,8 +31,7 @@ import { ImageGallery } from './blocks/ImageGallery'
 // Globals
 import { Hero } from './globals/Hero'
 import coordinatorsEndpoint from './endpoints/coordinators'
-import { Partners } from './globals/Partners'
-
+import { Partners } from './collections/Partners'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -44,8 +44,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, News, Tags, Programs, Projects, Pages],
-  globals: [Hero, Partners],
+  collections: [Users, Media, Partners,News, Tags, Programs, Projects, Pages, TeamMembers],
+  globals: [Hero],
   endpoints: [
     coordinatorsEndpoint,
   ],

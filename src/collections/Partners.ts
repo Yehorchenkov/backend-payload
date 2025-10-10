@@ -1,16 +1,16 @@
-import { GlobalConfig } from 'payload'
+import { CollectionConfig } from 'payload'
 import { anyone } from '@/access/anyone'
 import { isLoggedIn } from '@/access/isLoggedIn'
 
 import countriesData from '@/data/countries.json'
 const countryOptions = countriesData
-  .filter((country) => country.country) // Ensure country.name is defined
+  .filter((country) => country.country) // Ensure country.country is defined
   .map((country) => ({
     label: country.country as string,
     value: country.abbreviation as string,
   }))
 
-export const Partners: GlobalConfig = {
+export const Partners: CollectionConfig = {
   slug: 'partners',
   access: {
     read: anyone,
@@ -42,6 +42,28 @@ export const Partners: GlobalConfig = {
       name: 'country',
       type: 'select',
       options: countryOptions,
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'city',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'lat',
+          label: 'Latitude',
+          type: 'number',
+          required: true,
+        },
+        {
+          name: 'lon',
+          label: 'Longitude',
+          type: 'number',
+          required: true,
+        },
+      ]
     },
   ],
 }

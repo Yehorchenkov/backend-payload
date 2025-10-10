@@ -156,6 +156,13 @@ export interface User {
   hash?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
   password?: string | null;
 }
 /**
@@ -167,6 +174,7 @@ export interface Media {
   alt?: string | null;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   createdAt: string;
   updatedAt: string;
   folder?: (number | null) | FolderInterface;
@@ -228,6 +236,7 @@ export interface FolderInterface {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -498,6 +507,7 @@ export interface Partner {
   lon: number;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -517,7 +527,7 @@ export interface News {
     root: {
       type: string;
       children: {
-        type: string;
+        type: any;
         version: number;
         [k: string]: unknown;
       }[];
@@ -544,6 +554,7 @@ export interface News {
   };
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   publishDate?: string | null;
   publisher?: string | null;
   createdAt: string;
@@ -569,7 +580,7 @@ export interface Project {
     root: {
       type: string;
       children: {
-        type: string;
+        type: any;
         version: number;
         [k: string]: unknown;
       }[];
@@ -597,6 +608,7 @@ export interface Project {
   };
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   publishDate?: string | null;
   publisher?: string | null;
   createdAt: string;
@@ -617,6 +629,7 @@ export interface Program {
   slug?: string | null;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   slugLock?: boolean | null;
   createdAt: string;
   updatedAt: string;
@@ -633,6 +646,7 @@ export interface Tag {
   description?: string | null;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -649,7 +663,7 @@ export interface Page {
     root: {
       type: string;
       children: {
-        type: string;
+        type: any;
         version: number;
         [k: string]: unknown;
       }[];
@@ -672,6 +686,7 @@ export interface Page {
   };
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   publishDate?: string | null;
   publisher?: string | null;
   createdAt: string;
@@ -711,6 +726,7 @@ export interface TeamMember {
   slug?: string | null;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   slugLock?: boolean | null;
   createdAt: string;
   updatedAt: string;
@@ -822,6 +838,13 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -831,6 +854,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   createdAt?: T;
   updatedAt?: T;
   folder?: T;
@@ -893,6 +917,7 @@ export interface PartnersSelect<T extends boolean = true> {
   lon?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   createdAt?: T;
   updatedAt?: T;
 }
@@ -918,6 +943,7 @@ export interface NewsSelect<T extends boolean = true> {
       };
   creator?: T;
   updator?: T;
+  process?: T;
   publishDate?: T;
   publisher?: T;
   createdAt?: T;
@@ -933,6 +959,7 @@ export interface TagsSelect<T extends boolean = true> {
   description?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   createdAt?: T;
   updatedAt?: T;
 }
@@ -947,6 +974,7 @@ export interface ProgramsSelect<T extends boolean = true> {
   slug?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   slugLock?: T;
   createdAt?: T;
   updatedAt?: T;
@@ -977,6 +1005,7 @@ export interface ProjectsSelect<T extends boolean = true> {
       };
   creator?: T;
   updator?: T;
+  process?: T;
   publishDate?: T;
   publisher?: T;
   createdAt?: T;
@@ -1001,6 +1030,7 @@ export interface PagesSelect<T extends boolean = true> {
       };
   creator?: T;
   updator?: T;
+  process?: T;
   publishDate?: T;
   publisher?: T;
   createdAt?: T;
@@ -1028,6 +1058,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
   slug?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   slugLock?: T;
   createdAt?: T;
   updatedAt?: T;
@@ -1040,6 +1071,7 @@ export interface PayloadFoldersSelect<T extends boolean = true> {
   name?: T;
   folder?: T;
   documentsAndFolders?: T;
+  folderType?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1086,6 +1118,7 @@ export interface Hero {
   image?: (number | null) | Media;
   creator?: string | null;
   updator?: string | null;
+  process?: string | null;
   createdAt?: string | null;
   updatedAt?: string | null;
 }
@@ -1099,6 +1132,7 @@ export interface HeroSelect<T extends boolean = true> {
   image?: T;
   creator?: T;
   updator?: T;
+  process?: T;
   createdAt?: T;
   updatedAt?: T;
   globalType?: T;

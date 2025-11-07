@@ -17,7 +17,7 @@ import { addAuthorsFields } from '@shefing/authors-info'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { News } from './collections/News'
-import { Tags } from './collections/Tags'
+import { NewsTags } from './collections/NewsTags'
 import { Programs } from './collections/Programs'
 import { Projects } from './collections/Projects'
 import { Pages } from './collections/Pages'
@@ -32,6 +32,8 @@ import { ImageGallery } from './blocks/ImageGallery'
 import { Hero } from './globals/Hero'
 import coordinatorsEndpoint from './endpoints/coordinators'
 import { Partners } from './collections/Partners'
+import { SocialPlatforms } from './collections/SocialPlatforms'
+import { ScientificPlatforms } from './collections/ScientificPlatforms'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -44,7 +46,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Partners,News, Tags, Programs, Projects, Pages, TeamMembers],
+  collections: [Users, Media, Partners, News, NewsTags, SocialPlatforms, ScientificPlatforms, Programs, Projects, Pages, TeamMembers],
   globals: [Hero],
   endpoints: [
     coordinatorsEndpoint,

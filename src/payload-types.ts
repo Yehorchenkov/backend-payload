@@ -71,7 +71,9 @@ export interface Config {
     media: Media;
     partners: Partner;
     news: News;
-    tags: Tag;
+    newsTags: NewsTag;
+    socialPlatforms: SocialPlatform;
+    scientificPlatforms: ScientificPlatform;
     programs: Program;
     projects: Project;
     pages: Page;
@@ -91,7 +93,9 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
-    tags: TagsSelect<false> | TagsSelect<true>;
+    newsTags: NewsTagsSelect<false> | NewsTagsSelect<true>;
+    socialPlatforms: SocialPlatformsSelect<false> | SocialPlatformsSelect<true>;
+    scientificPlatforms: ScientificPlatformsSelect<false> | ScientificPlatformsSelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -521,7 +525,7 @@ export interface News {
   id: number;
   image?: (number | null) | Media;
   project?: (number | Project)[] | null;
-  tags?: (number | Tag)[] | null;
+  tags?: (number | NewsTag)[] | null;
   title: string;
   content: {
     root: {
@@ -570,7 +574,7 @@ export interface News {
 export interface Project {
   id: number;
   program: number | Program;
-  coordinator?: (number | null) | User;
+  coordinator?: (number | null) | TeamMember;
   startDate?: string | null;
   finishDate?: string | null;
   projectLogo?: (number | null) | Media;
@@ -635,12 +639,107 @@ export interface Program {
   updatedAt: string;
 }
 /**
+ * SPECTRA team members.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  /**
+   * Job title or position, e.g., Project Manager, etc.
+   */
+  title: string;
+  photo?: (number | null) | Media;
+  /**
+   * A brief summary of the team member's scientific profile and research interests.
+   */
+  profile: string;
+  /**
+   * Email address of the team member.
+   */
+  email: string;
+  /**
+   * Any other relevant information about the team member.
+   */
+  additionalInfo?: string | null;
+  showOnLandingPage?: boolean | null;
+  /**
+   * Order in which team member appears on landing page (lower numbers appear first)
+   */
+  order?: number | null;
+  /**
+   * Links to the team member's social profiles or personal website.
+   */
+  socialLinks?:
+    | {
+        platform: number | SocialPlatform;
+        /**
+         * The full URL to the profile.
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Links to the team member's scientific profiles like ORCID, Google Scholar, etc.
+   */
+  scientificLinks?:
+    | {
+        platform: number | ScientificPlatform;
+        /**
+         * The full URL to the profile or identifier.
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  slug?: string | null;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  slugLock?: boolean | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * Social Platforms
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "socialPlatforms".
+ */
+export interface SocialPlatform {
+  id: number;
+  platformName: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * Scientific Platforms
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scientificPlatforms".
+ */
+export interface ScientificPlatform {
+  id: number;
+  platformName: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
  * Tags for the news
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
+ * via the `definition` "newsTags".
  */
-export interface Tag {
+export interface NewsTag {
   id: number;
   name: string;
   description?: string | null;
@@ -694,44 +793,6 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * SPECTRA team members.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members".
- */
-export interface TeamMember {
-  id: number;
-  name: string;
-  /**
-   * Job title or position, e.g., Project Manager, etc.
-   */
-  title: string;
-  photo?: (number | null) | Media;
-  bio?: string | null;
-  /**
-   * Email address of the team member.
-   */
-  email?: string | null;
-  /**
-   * Links to the team member's social profiles or personal website.
-   */
-  links?:
-    | {
-        label?: ('linkedin' | 'X' | 'github' | 'website' | 'facebook' | 'instagram' | 'other') | null;
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  showOnLandingPage?: boolean | null;
-  slug?: string | null;
-  creator?: string | null;
-  updator?: string | null;
-  process?: string | null;
-  slugLock?: boolean | null;
-  createdAt: string;
-  updatedAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -755,8 +816,16 @@ export interface PayloadLockedDocument {
         value: number | News;
       } | null)
     | ({
-        relationTo: 'tags';
-        value: number | Tag;
+        relationTo: 'newsTags';
+        value: number | NewsTag;
+      } | null)
+    | ({
+        relationTo: 'socialPlatforms';
+        value: number | SocialPlatform;
+      } | null)
+    | ({
+        relationTo: 'scientificPlatforms';
+        value: number | ScientificPlatform;
       } | null)
     | ({
         relationTo: 'programs';
@@ -952,11 +1021,35 @@ export interface NewsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags_select".
+ * via the `definition` "newsTags_select".
  */
-export interface TagsSelect<T extends boolean = true> {
+export interface NewsTagsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "socialPlatforms_select".
+ */
+export interface SocialPlatformsSelect<T extends boolean = true> {
+  platformName?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scientificPlatforms_select".
+ */
+export interface ScientificPlatformsSelect<T extends boolean = true> {
+  platformName?: T;
   creator?: T;
   updator?: T;
   process?: T;
@@ -1045,16 +1138,25 @@ export interface TeamMembersSelect<T extends boolean = true> {
   name?: T;
   title?: T;
   photo?: T;
-  bio?: T;
+  profile?: T;
   email?: T;
-  links?:
+  additionalInfo?: T;
+  showOnLandingPage?: T;
+  order?: T;
+  socialLinks?:
     | T
     | {
-        label?: T;
+        platform?: T;
         url?: T;
         id?: T;
       };
-  showOnLandingPage?: T;
+  scientificLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
   slug?: T;
   creator?: T;
   updator?: T;

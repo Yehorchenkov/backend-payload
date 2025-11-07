@@ -65,7 +65,7 @@ export const Projects: CollectionConfig = {
                   name: 'coordinator',
                   label: 'Project coordinator',
                   type: 'relationship',
-                  relationTo: 'users',
+                  relationTo: 'team-members',
                   hasMany: false,
                 },
                 {

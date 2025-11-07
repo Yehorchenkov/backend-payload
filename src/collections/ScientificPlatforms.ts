@@ -2,8 +2,8 @@ import type { CollectionConfig } from 'payload'
 import { isLoggedIn } from '@/access/isLoggedIn'
 import { anyone } from '@/access/anyone'
 
-export const Tags: CollectionConfig = {
-  slug: 'tags',
+export const ScientificPlatforms: CollectionConfig = {
+  slug: 'scientificPlatforms',
   access: {
     read: anyone,
     create: isLoggedIn,
@@ -11,20 +11,17 @@ export const Tags: CollectionConfig = {
     delete: isLoggedIn,
   },
   admin: {
-    useAsTitle: 'name',
-    description: 'Tags for the news',
+    useAsTitle: 'platformName',
+    description: 'Scientific Platforms',
+    group: 'Tags',
   },
-  defaultSort: ['name'],
+  defaultSort: ['platformName'],
   fields: [
     {
-      name: 'name',
+      name: 'platformName',
       type: 'text',
       required: true,
       unique: true,
-    },
-    {
-      name: 'description',
-      type: 'textarea',
     },
   ],
 }

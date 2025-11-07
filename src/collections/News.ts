@@ -59,7 +59,7 @@ export const News: CollectionConfig = {
                 {
                   name: 'tags',
                   type: 'relationship',
-                  relationTo: 'tags',
+                  relationTo: 'newsTags',
                   hasMany: true,
                 },
               ],

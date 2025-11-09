@@ -34,6 +34,7 @@ import coordinatorsEndpoint from './endpoints/coordinators'
 import { Partners } from './collections/Partners'
 import { SocialPlatforms } from './collections/SocialPlatforms'
 import { ScientificPlatforms } from './collections/ScientificPlatforms'
+import { ProjectRoles } from './collections/ProjectRoles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -46,7 +47,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Partners, News, NewsTags, SocialPlatforms, ScientificPlatforms, Programs, Projects, Pages, TeamMembers],
+  collections: [Users, Media, Partners, News, NewsTags, SocialPlatforms, ScientificPlatforms, ProjectRoles, Programs, Projects, Pages, TeamMembers],
   globals: [Hero],
   endpoints: [
     coordinatorsEndpoint,

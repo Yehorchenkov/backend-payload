@@ -16,6 +16,11 @@ export const TeamMembers: CollectionConfig = {
     description: 'SPECTRA team members.',
     defaultColumns: ['name', 'title', 'photo', 'profile', 'order'],
   },
+  defaultPopulate: {
+    name: true,
+    slug: true,
+    photo: true,
+  },
   fields: [
     {
       name: 'name',

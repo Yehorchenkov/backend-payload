@@ -74,6 +74,7 @@ export interface Config {
     newsTags: NewsTag;
     socialPlatforms: SocialPlatform;
     scientificPlatforms: ScientificPlatform;
+    projectRoles: ProjectRole;
     programs: Program;
     projects: Project;
     pages: Page;
@@ -96,6 +97,7 @@ export interface Config {
     newsTags: NewsTagsSelect<false> | NewsTagsSelect<true>;
     socialPlatforms: SocialPlatformsSelect<false> | SocialPlatformsSelect<true>;
     scientificPlatforms: ScientificPlatformsSelect<false> | ScientificPlatformsSelect<true>;
+    projectRoles: ProjectRolesSelect<false> | ProjectRolesSelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -574,12 +576,25 @@ export interface News {
 export interface Project {
   id: number;
   program: number | Program;
-  coordinator?: (number | null) | TeamMember;
   startDate?: string | null;
   finishDate?: string | null;
   projectLogo?: (number | null) | Media;
   title: string;
   acronym: string;
+  /**
+   * List of team members roles
+   */
+  projectParticipants?:
+    | {
+        participantName?: (number | null) | TeamMember;
+        /**
+         * Role of the participant in the project including the responsible person.
+         */
+        participantRole?: (number | null) | ProjectRole;
+        isResponsible?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   content: {
     root: {
       type: string;
@@ -734,6 +749,21 @@ export interface ScientificPlatform {
   updatedAt: string;
 }
 /**
+ * Project Roles
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectRoles".
+ */
+export interface ProjectRole {
+  id: number;
+  roleName: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
  * Tags for the news
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -826,6 +856,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'scientificPlatforms';
         value: number | ScientificPlatform;
+      } | null)
+    | ({
+        relationTo: 'projectRoles';
+        value: number | ProjectRole;
       } | null)
     | ({
         relationTo: 'programs';
@@ -1058,6 +1092,18 @@ export interface ScientificPlatformsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectRoles_select".
+ */
+export interface ProjectRolesSelect<T extends boolean = true> {
+  roleName?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
@@ -1078,12 +1124,19 @@ export interface ProgramsSelect<T extends boolean = true> {
  */
 export interface ProjectsSelect<T extends boolean = true> {
   program?: T;
-  coordinator?: T;
   startDate?: T;
   finishDate?: T;
   projectLogo?: T;
   title?: T;
   acronym?: T;
+  projectParticipants?:
+    | T
+    | {
+        participantName?: T;
+        participantRole?: T;
+        isResponsible?: T;
+        id?: T;
+      };
   content?: T;
   'Project state'?: T;
   excerpt?: T;

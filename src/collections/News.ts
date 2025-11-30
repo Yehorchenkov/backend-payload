@@ -30,6 +30,14 @@ export const News: CollectionConfig = {
     description: 'News articles and updates.',
     group: 'Content',
   },
+  defaultPopulate: {
+    title: true,
+    slug: true,
+    image: true,
+    project: true,
+    excerpt: true,
+    publishDate: true,
+  },
   defaultSort: ['-updatedAt', 'title'],
   versions: {
     drafts: true,
@@ -87,7 +95,7 @@ export const News: CollectionConfig = {
               admin: {
                 description:
                   'A short summary of the news article. Automatically generated from content.',
-                readOnly: true, // Or true if you ONLY want it auto-generated
+                readOnly: true,
               },
             },
             ...SlugField('title'),

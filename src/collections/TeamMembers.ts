@@ -20,6 +20,7 @@ export const TeamMembers: CollectionConfig = {
     name: true,
     slug: true,
     photo: true,
+    order: true,
   },
   fields: [
     {
@@ -38,12 +39,12 @@ export const TeamMembers: CollectionConfig = {
     {
       name: 'photo',
       type: 'upload',
-      relationTo: 'media',
+      relationTo: 'user-media',
     },
     {
       name: 'profile',
-      type: 'textarea',
-      required: true,
+      type: 'richText',
+      required: false,
       admin: {
         description:
           "A brief summary of the team member's scientific profile and research interests.",
@@ -58,8 +59,16 @@ export const TeamMembers: CollectionConfig = {
       },
     },
     {
+      name: 'address',
+      type: 'text',
+      admin: {
+        placeholder: 'Odbojárov 10, P.O.Box 95, 820 18 Bratislava, Slovakia',
+        description: 'Physical address of the team member.',
+      },
+    },
+    {
       name: 'additionalInfo',
-      type: 'textarea',
+      type: 'richText',
       admin: {
         description: 'Any other relevant information about the team member.',
       },
@@ -129,6 +138,15 @@ export const TeamMembers: CollectionConfig = {
           },
         },
       ],
+    },
+    {
+      name: 'projects',
+      type: 'join',
+      collection: 'projects',
+      on: 'projectParticipants.participantName',
+      admin: {
+        hidden: true,
+      },
     },
     ...SlugField('name'),
   ],

@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    'user-media': UserMedia;
     partners: Partner;
     news: News;
     newsTags: NewsTag;
@@ -79,12 +80,19 @@ export interface Config {
     projects: Project;
     pages: Page;
     'team-members': TeamMember;
+    'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    projects: {
+      news: 'news';
+    };
+    'team-members': {
+      projects: 'projects';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -92,6 +100,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'user-media': UserMediaSelect<false> | UserMediaSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     newsTags: NewsTagsSelect<false> | NewsTagsSelect<true>;
@@ -102,6 +111,7 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -110,6 +120,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
+  fallbackLocale: null;
   globals: {
     hero: Hero;
   };
@@ -202,22 +213,6 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    tablet?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
   };
 }
 /**
@@ -245,6 +240,41 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-media".
+ */
+export interface UserMedia {
+  id: number;
+  /**
+   * Alternative text for the media, describing its content for accessibility purposes.
+   */
+  alt: string;
+  creator?: string | null;
+  updator?: string | null;
+  process?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    avatar?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -582,6 +612,23 @@ export interface Project {
   title: string;
   acronym: string;
   /**
+   * URL of the project website.
+   */
+  projectWebsite?: string | null;
+  /**
+   * List of funding bodies or acknowledgements for the project.
+   */
+  projectAcknowledgement?:
+    | {
+        acknowledgementLogo?: (number | null) | Media;
+        /**
+         * Formula or text for the acknowledgement.
+         */
+        acknowledgementFormula?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * List of team members roles
    */
   projectParticipants?:
@@ -610,11 +657,19 @@ export interface Project {
     };
     [k: string]: unknown;
   };
-  'Project state': 'ongoing' | 'finished';
+  /**
+   * Current state of the project.
+   */
+  projectState: 'ongoing' | 'finished';
   /**
    * A short summary of the project article. Automatically generated from content.
    */
   excerpt?: string | null;
+  news?: {
+    docs?: (number | News)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   slug?: string | null;
   slugLock?: boolean | null;
   meta?: {
@@ -666,19 +721,51 @@ export interface TeamMember {
    * Job title or position, e.g., Project Manager, etc.
    */
   title: string;
-  photo?: (number | null) | Media;
+  photo?: (number | null) | UserMedia;
   /**
    * A brief summary of the team member's scientific profile and research interests.
    */
-  profile: string;
+  profile?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Email address of the team member.
    */
   email: string;
   /**
+   * Physical address of the team member.
+   */
+  address?: string | null;
+  /**
    * Any other relevant information about the team member.
    */
-  additionalInfo?: string | null;
+  additionalInfo?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   showOnLandingPage?: boolean | null;
   /**
    * Order in which team member appears on landing page (lower numbers appear first)
@@ -714,6 +801,11 @@ export interface TeamMember {
   creator?: string | null;
   updator?: string | null;
   process?: string | null;
+  projects?: {
+    docs?: (number | Project)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   slugLock?: boolean | null;
   createdAt: string;
   updatedAt: string;
@@ -824,6 +916,23 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-kv".
+ */
+export interface PayloadKv {
+  id: number;
+  key: string;
+  data:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -836,6 +945,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'user-media';
+        value: number | UserMedia;
       } | null)
     | ({
         relationTo: 'partners';
@@ -983,17 +1096,32 @@ export interface MediaSelect<T extends boolean = true> {
               filesize?: T;
               filename?: T;
             };
-        card?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        tablet?:
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-media_select".
+ */
+export interface UserMediaSelect<T extends boolean = true> {
+  alt?: T;
+  creator?: T;
+  updator?: T;
+  process?: T;
+  createdAt?: T;
+  updatedAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        avatar?:
           | T
           | {
               url?: T;
@@ -1129,6 +1257,14 @@ export interface ProjectsSelect<T extends boolean = true> {
   projectLogo?: T;
   title?: T;
   acronym?: T;
+  projectWebsite?: T;
+  projectAcknowledgement?:
+    | T
+    | {
+        acknowledgementLogo?: T;
+        acknowledgementFormula?: T;
+        id?: T;
+      };
   projectParticipants?:
     | T
     | {
@@ -1138,8 +1274,9 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   content?: T;
-  'Project state'?: T;
+  projectState?: T;
   excerpt?: T;
+  news?: T;
   slug?: T;
   slugLock?: T;
   meta?:
@@ -1193,6 +1330,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
   photo?: T;
   profile?: T;
   email?: T;
+  address?: T;
   additionalInfo?: T;
   showOnLandingPage?: T;
   order?: T;
@@ -1214,9 +1352,18 @@ export interface TeamMembersSelect<T extends boolean = true> {
   creator?: T;
   updator?: T;
   process?: T;
+  projects?: T;
   slugLock?: T;
   createdAt?: T;
   updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-kv_select".
+ */
+export interface PayloadKvSelect<T extends boolean = true> {
+  key?: T;
+  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1269,7 +1416,21 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Hero {
   id: number;
   title: string;
-  description: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   image?: (number | null) | Media;
   creator?: string | null;
   updator?: string | null;

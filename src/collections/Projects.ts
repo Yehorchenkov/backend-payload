@@ -85,8 +85,10 @@ export const Projects: CollectionConfig = {
     program: true,
     slug: true,
     excerpt: true,
-    coordinator: true,
+    projectParticipants: true,
     projectLogo: true,
+    projectState: true,
+    startDate: true,
   },
   defaultSort: ['-publishedDate', 'title'],
   versions: {
@@ -151,6 +153,45 @@ export const Projects: CollectionConfig = {
               required: true,
             },
             {
+              name: 'projectWebsite',
+              label: 'Project Website',
+              type: 'text',
+              admin: {
+                description: 'URL of the project website.',
+              },
+              validate: (value: unknown) => {
+                if (!value) return true
+                const urlRegex = /^https?:\/\/.+/i
+                return urlRegex.test(value as string)
+                  ? true
+                  : 'Please enter a valid URL starting with http:// or https://'
+              },
+            },
+            {
+              name: 'projectAcknowledgement',
+              label: 'Project Acknowledgement',
+              type: 'array',
+              admin: {
+                description: 'List of funding bodies or acknowledgements for the project.',
+              },
+              fields: [
+                {
+                  name: 'acknowledgementLogo',
+                  label: 'Acknowledgement Logo',
+                  type: 'upload',
+                  relationTo: 'media',
+                },
+                {
+                  name: 'acknowledgementFormula',
+                  label: 'Acknowledgement Formula',
+                  type: 'text',
+                  admin: {
+                    description: 'Formula or text for the acknowledgement.',
+                  },
+                },
+              ],
+            },
+            {
               name: 'projectParticipants',
               label: 'Project Participants',
               type: 'array',
@@ -194,11 +235,17 @@ export const Projects: CollectionConfig = {
           description: 'Additional details',
           fields: [
             {
-              name: 'Project state',
-              type: 'radio',
-              options: ['ongoing', 'finished'],
+              name: 'projectState',
+              type: 'select',
+              options: [
+                { label: 'Ongoing', value: 'ongoing' },
+                { label: 'Finished', value: 'finished' },
+              ],
               defaultValue: 'ongoing',
               required: true,
+              admin: {
+                description: 'Current state of the project.',
+              },
             },
             {
               // Add the excerpt field
@@ -208,6 +255,15 @@ export const Projects: CollectionConfig = {
                 description:
                   'A short summary of the project article. Automatically generated from content.',
                 readOnly: true, // Or true if you ONLY want it auto-generated
+              },
+            },
+            {
+              name: 'news',
+              type: 'join',
+              collection: 'news',
+              on: 'project',
+              admin: {
+                hidden: true,
               },
             },
             ...SlugField('title'),

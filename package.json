@@ -17,17 +17,18 @@
   "dependencies": {
     "@nouance/payload-better-fields-plugin": "^2.0.2",
     "@payload-enchants/docs-reorder": "^1.2.2",
-    "@payloadcms/db-sqlite": "3.59.1",
-    "@payloadcms/next": "3.59.1",
-    "@payloadcms/payload-cloud": "3.59.1",
-    "@payloadcms/plugin-seo": "3.59.1",
-    "@payloadcms/richtext-lexical": "3.59.1",
+    "@payloadcms/db-postgres": "3.65.0",
+    "@payloadcms/db-sqlite": "3.65.0",
+    "@payloadcms/next": "3.65.0",
+    "@payloadcms/payload-cloud": "3.65.0",
+    "@payloadcms/plugin-seo": "3.65.0",
+    "@payloadcms/richtext-lexical": "3.65.0",
     "@shefing/authors-info": "^1.0.23",
     "@shefing/custom-version-view": "^1.0.9",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
-    "next": "15.2.3",
-    "payload": "3.59.1",
+    "next": "15.4.7",
+    "payload": "3.65.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "sharp": "0.32.6"
@@ -38,7 +39,7 @@
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "eslint": "^9.16.0",
-    "eslint-config-next": "15.2.3",
+    "eslint-config-next": "15.4.7",
     "prettier": "^3.4.2",
     "typescript": "5.7.3"
   },
@@ -49,6 +50,15 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "sharp"
-    ]
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "payload": "*",
+        "@payloadcms/ui": "*",
+        "i18next": "*",
+        "date-fns-tz": "*",
+        "slug": "*"
+      }
+    }
   }
 }
